@@ -61,9 +61,7 @@ class Camera:
         self.position = position
         self.faceX = 0
         self.faceY = 0
-##    def __exit__(self, type, value, traceback):
-##        self.cam = None
-##        self.image = None
+
 ##==============================================================================
     def getFaceX(self):
         return str(self.faceX)
@@ -89,19 +87,7 @@ class Camera:
 ##==============================================================================
     def drawHistogram(self,image):
         '''input of numpy.ndarray type, output is PhotoImage type'''
-#---------plots histogram with pylab in external window - only to compare with other
-##        plt.hist(image.ravel(),256,[0,256]); plt.show()
-##        h = numpy.zeros((300,256,3))
-##        bins = numpy.arange(256).reshape(256,1)
-##        color = [ (255,0,0),(0,255,0),(0,0,255) ]
-##        for ch, col in enumerate(color):
-##            hist_item = cv2.calcHist([image],[ch],None,[256],[0,256])
-##            cv2.normalize(hist_item,hist_item,0,255,cv2.NORM_MINMAX)
-##            hist=numpy.int32(numpy.around(hist_item))
-##            pts = numpy.column_stack((bins,hist))
-##            cv2.polylines(h,[pts],False,col)
-##        h=numpy.flipud(h)
-#-----------the best results--------------
+
         h = numpy.zeros((300,256,3))
         b,g,r = image[:,:,0].copy(),image[:,:,1].copy(),image[:,:,2].copy()
         bins = numpy.arange(257)
@@ -117,23 +103,7 @@ class Camera:
             cv2.polylines(h,[pts],False,col,2)
 
         h=numpy.flipud(h)
-#------------not bad but less readable----------
-##        bins = numpy.arange(256).reshape(256,1)
-##        color = [ (255,0,0),(0,255,0),(0,0,255) ]
-##        h = numpy.zeros((300,256,3))
-##        #print image.shape => (480, 640, 3)
-##        if len(image.shape) == 2:
-##            color = [(255,255,255)]
-##        elif image.shape[2] == 3:
-##            color = [ (255,0,0),(0,255,0),(0,0,255) ]
-##        for ch, col in enumerate(color):
-##            hist_item = cv2.calcHist([image],[ch],None,[256],[0,256])
-##            cv2.normalize(hist_item,hist_item,0,255,cv2.NORM_MINMAX)
-##            hist=numpy.int32(numpy.around(hist_item))
-##            pts = numpy.int32(numpy.column_stack((bins,hist)))
-##            cv2.polylines(h,[pts],False,col)
-##        h=numpy.flipud(h)
-        #print type(h)
+
         #convert numpy.ndarray to iplimage
         ipl_img = cv2.cv.CreateImageHeader((h.shape[1], h.shape[0]), cv.IPL_DEPTH_8U,3)
         cv2.cv.SetData(ipl_img, h.tostring(),h.dtype.itemsize * 3 * h.shape[1])
@@ -190,8 +160,7 @@ class Camera:
         #convert numpy.ndarray to iplimage
         ipl_img = cv2.cv.CreateImageHeader((img.shape[1], img.shape[0]), cv.IPL_DEPTH_8U,3)
         cv2.cv.SetData(ipl_img, img.tostring(),img.dtype.itemsize * 3 * img.shape[1])
-        #ipl_img = cv.fromarray(img)
-
+  
 
         # Convert color input image to grayscale
         cv.CvtColor(ipl_img, gray, cv.CV_BGR2GRAY)
@@ -243,23 +212,6 @@ class Camera:
                     eye[0][1] + eye[0][3]),
                     cv.RGB(255, 0, 0), 1, 4, 0)                                 #color,thickness,lineType(8,4,cv.CV_AA),shift
 
-##                            cv.Circle(ipl_img,
-##                            ((eye[0][0]+eye[0][2])/2,
-##                            (eye[0][1]+eye[0][3])/2),
-##                            10,
-##                            cv.RGB(255, 0, 0), 1, 4, 0)
-##        mouths = cv.HaarDetectObjects(ipl_img, mouthCascade,
-##        cv.CreateMemStorage(0),
-##        haar_scale, min_neighbors,
-##        haar_flags, (15,15))
-##        if mouths:
-##            for mouth in mouths:
-##                cv.Rectangle(ipl_img,       #image
-##                (mouth[0][0],                 #vertex pt1
-##                mouth[0][1]),
-##                (mouth[0][0] + mouth[0][2],     #vertex pt2 opposite to pt1
-##                mouth[0][1] + mouth[0][3]),
-##                cv.RGB(255, 0, 0), 1, 4, 0) #color,thickness,lineType(8,4,cv.CV_AA),shift
 
         cv.ResetImageROI(ipl_img)
 
@@ -280,8 +232,7 @@ class Camera:
                 (self.readsuccessful,self.f) = self.cam.read()                  #=>'numpy.ndarray' object
                 self.capture = cv2.cvtColor(self.f, cv2.COLOR_BGR2RGBA)         #cv2.COLOR_RGB2GRAY)=>'numpy.ndarray' object
 
-                #prop = self.cam.get(cv.CV_CAP_PROP_FPS)
-
+  
                 self.draw_str(self.capture, (20, 50), 'Obraz testowy')#. FPS='+str(prop))
 
                 self.a = Image.fromarray(self.capture)                          #new in PIL 1.1.6 (PIL.Image.VERSION=1.1.7)
@@ -319,8 +270,6 @@ class Camera:
              cv.Smooth(ipl_img, dst_img, cv.CV_GAUSSIAN)
         elif self.effect == 'erode':
              cv.Erode(ipl_img, dst_img, None, 1)
-##        elif self.effect == 'threshold_otsu':
-##             cv.Threshold(ipl_img,dst_img, 100,255,cv.CV_THRESH_OTSU)           # TODO: ruler for threshold and color values
 
         cv.Convert(dst_img,ipl_img)
         return self.ipl2tk_image(dst_img)
@@ -446,10 +395,7 @@ class App:
 ##==============================================================================
     def _update_contrast(self, val):
         self.video.setContrast(float(val))
-##==============================================================================
-##    def __exit__(self, type, value, traceback):
-##        self.cam = None
-##        self.video = None
+
 ##==============================================================================
 ##>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 ##==============================================================================
